@@ -1,8 +1,12 @@
 /*
  * skinny_128_128.asm
+ * 
+ * reference implementation on ATmega644
  *
  *  Created: 2016/12/22 9:45:58
- *   Author: Administrator
+ *   Author: luopeng
+ *
+ * http://www.atmel.com/webdoc/avrassembler/index.html
  */ 
 
 .EQU	SBOX_NUM_BYTE = 256

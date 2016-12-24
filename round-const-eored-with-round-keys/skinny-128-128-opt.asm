@@ -3,10 +3,10 @@
  * 
  * optimized implementation on ATmega644
  * 
- * round constants are eor-ed with round keys in key schedule,
- * then the round keys are stroed in RAM.
- * since only 8 bytes are eor-ed each round,
- * the size of round-key is 320-byte.
+ * Round constants are eor-ed with round keys in key schedule, then the
+ * round keys are stroed in RAM. Since only 8 bytes are eor-ed each 
+ * round, only 8 bytes of each round are stored. So the total size of 
+ * round-key is 320-byte.
  *
  *  Created: 2016/12/22 9:45:58
  *   Author: luopeng

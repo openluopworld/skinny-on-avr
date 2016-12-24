@@ -179,6 +179,8 @@ key_schedule_exit:
 	st	z+,		s12
 .endmacro
 
+; If the start address of SBOX in RAM is 0x0000, the mov instructions
+; can be deleted. But the result is wrong when testing on that condition.
 .macro sub_column_first
 	mov		r30,	s0
 	ld		s0,		z

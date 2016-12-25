@@ -10,8 +10,6 @@
  *
  *  Created: 2016/12/22 9:45:58
  *   Author: luopeng
- *
- * http://www.atmel.com/webdoc/avrassembler/index.html
  */ 
 
 .EQU	SBOX_NUM_BYTE = 256

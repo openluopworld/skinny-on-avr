@@ -2,7 +2,7 @@
  * skinny_128_128_opt.asm
  *
  *  Created: 2016/12/22 21:06:52
- *   Author: Administrator
+ *   Author: luopeng
  */ 
 
 .ORG 0x0000

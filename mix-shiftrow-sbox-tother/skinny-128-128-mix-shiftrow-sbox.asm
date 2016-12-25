@@ -156,6 +156,10 @@ key_schedule_exit:
 .endmacro
 
 .macro store_ciphertext
+	st	z+,		s13
+	st	z+,		s14
+	st	z+,		s15
+	st	z+,		s12
 	st	z+,		s0
 	st	z+,		s1
 	st	z+,		s2
@@ -168,14 +172,8 @@ key_schedule_exit:
 	st	z+,		s11
 	st	z+,		s8
 	st	z+,		s9
-	st	z+,		s13
-	st	z+,		s14
-	st	z+,		s15
-	st	z+,		s12
 .endmacro
 
-; If the start address of SBOX in RAM is 0x0000, the mov instructions
-; can be deleted. But the result is wrong when testing on that condition.
 .macro sub_column_first
 	mov		r30,	s0
 	ld		s0,		z
@@ -231,10 +229,10 @@ key_schedule_exit:
 	eor		s8,		two
 .endmacro
 
-; 0  1  2  3         0  1  2  3         13 14 15 12
-; 4  5  6  7         7  4  5  6         0  1  2  3
-; 8  9  10 11 -----> 10 11 8  9   ----> 7  4  5  6
-; 12 13 14 15        13 14 15 12        10 11 8  9
+; 0  1  2  3               0  1  2  3                13 14 15 12
+; 4  5  6  7   shiftrow    7  4  5  6   mixcolumn    0  1  2  3
+; 8  9  10 11 -----------> 10 11 8  9  ----------->  7  4  5  6
+; 12 13 14 15              13 14 15 12               10 11 8  9
 ; eor 	s4,		s8
 ; eor 	s8,		s0
 ; eor 	s12,	s8
@@ -243,6 +241,10 @@ key_schedule_exit:
 ; mov	s8,		s4
 ; mov	s4,		s0
 ; mov	s0,		t0
+; The mix-column is done without the mov instructions.
+; So the registers are in wrong order.
+; After the execution of mix_column, the content of s0 is in s13,
+; the content in s1 is in r14, ..., and the content of s14 is in r9.
 .macro mix_column
 	; first column
 	eor 	s7,		s10
@@ -262,10 +264,10 @@ key_schedule_exit:
 	eor 	s12,	s9
 .endmacro
 
-; 13 14 15 12        0  1  2  3
-; 0  1  2  3         4  5  6  7 
-; 7  4  5  6  -----> 8  9  10 11
-; 10 11 8  9         12 13 14 15 
+; 13 14 15 12              0  1  2  3
+; 0  1  2  3    subcolumn  4  5  6  7 
+; 7  4  5  6  -----------> 8  9  10 11
+; 10 11 8  9               12 13 14 15 
 .macro shift_row_with_sub_column
 	; first part
 	mov		t0,		s0
@@ -305,6 +307,8 @@ key_schedule_exit:
 	ld		s5,		z
 .endmacro
 
+; Sub-column of the first round is done seperately
+; Other rounds are done together with the shiftrow
 encrypt:
 	ldi	two,	0x02
 	ldi count,	ENC_DEC_ROUNDS

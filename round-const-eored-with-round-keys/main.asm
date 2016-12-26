@@ -1,7 +1,7 @@
 /*
- * skinny_128_128_opt.asm
+ * main.asm
  *
- *  Created: 2016/12/22 21:06:52
+ *  Created: 2016/12/26 8:35:41
  *   Author: luopeng
  */ 
 
@@ -21,7 +21,7 @@
 	rjmp	main
 
 
-    .include "./skinny-128-128-opt.asm"
+    .include "./round-const-eor-with-round-keys.inc"
 
 .CSEG
 

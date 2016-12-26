@@ -21,7 +21,7 @@
 	rjmp	main
 
 
-    .include "./skinny-128-128-reference.asm"
+    .include "./skinny-128-128-reference.inc"
 
 .CSEG
 

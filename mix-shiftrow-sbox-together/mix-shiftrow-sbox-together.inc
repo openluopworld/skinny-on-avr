@@ -310,14 +310,15 @@ key_schedule_exit:
 ; Other rounds are done together with the shiftrow
 encrypt:
 	ldi	two,	0x02
-	ldi count,	ENC_DEC_ROUNDS
+	ldi count,	39
 	sub_column_first
+	add_key
+	mix_column
 enc_round:
+	shift_row_with_sub_column
 	add_key
 	mix_column
 	dec	count
-	breq exit
-	shift_row_with_sub_column
-	rjmp enc_round
+	brne enc_round
 exit:
 	ret

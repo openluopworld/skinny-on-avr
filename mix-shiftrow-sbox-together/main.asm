@@ -2,7 +2,7 @@
  * main.asm
  *
  *  Created: 2016/12/26 8:48:30
- *   Author: Administrator
+ *   Author: luopeng
  */
 
 .ORG 0x0000
@@ -133,7 +133,9 @@ main_loop:
 	ldi 	ZL, low(SRAM_SBOX)
 	ldi 	XH, high(SRAM_KEY)
 	ldi 	XL, low(SRAM_KEY)
+#ifdef	ENCRYPT
 	rcall	encrypt
+#endif
 	nop
 	nop
 	nop

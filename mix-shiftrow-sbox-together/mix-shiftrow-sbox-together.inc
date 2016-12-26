@@ -14,6 +14,8 @@
 .EQU    PTEXT_NUM_BYTE = 16
 .EQU    KEY_NUM_BYTE = 320
 
+#define ENCRYPT
+
 .def s0 	=	r0
 .def s1 	=	r1
 .def s2 	=	r2
@@ -137,22 +139,22 @@ key_schedule_exit:
 /********************************************/
 /* encrypt **********************************/
 .macro load_plaintext
+	lpm	s13,	z+
+	lpm	s14,	z+
+	lpm	s15,	z+
+	lpm	s12,	z+
 	lpm	s0,		z+
 	lpm	s1,		z+
 	lpm	s2,		z+
 	lpm	s3,		z+
+	lpm	s7,		z+
 	lpm	s4,		z+
 	lpm	s5,		z+
 	lpm	s6,		z+
-	lpm	s7,		z+
-	lpm	s8,		z+
-	lpm	s9,		z+
 	lpm	s10,	z+
 	lpm	s11,	z+
-	lpm	s12,	z+
-	lpm	s13,	z+
-	lpm	s14,	z+
-	lpm	s15,	z+
+	lpm	s8,		z+
+	lpm	s9,		z+
 .endmacro
 
 .macro store_ciphertext
@@ -174,42 +176,7 @@ key_schedule_exit:
 	st	z+,		s9
 .endmacro
 
-.macro sub_column_first
-	mov		r30,	s0
-	ld		s0,		z
-	mov		r30,	s1
-	ld		s1,		z
-	mov		r30,	s2
-	ld		s2,		z
-	mov		r30,	s3
-	ld		s3,		z
-	mov		r30,	s4
-	ld		s4,		z
-	mov		r30,	s5
-	ld		s5,		z
-	mov		r30,	s6
-	ld		s6,		z
-	mov		r30,	s7
-	ld		s7,		z
-	mov		r30,	s8
-	ld		s8,		z
-	mov		r30,	s9
-	ld		s9,		z
-	mov		r30,	s10
-	ld		s10,	z
-	mov		r30,	s11
-	ld		s11,	z
-	mov		r30,	s12
-	ld		s12,	z
-	mov		r30,	s13
-	ld		s13,	z
-	mov		r30,	s14
-	ld		s14,	z
-	mov		r30,	s15
-	ld		s15,	z
-.endmacro
-
-.macro add_key
+.macro add_round_const_round_key
 	ld		t0,		x+
 	eor 	s0,		t0
 	ld		t0,		x+
@@ -308,17 +275,16 @@ key_schedule_exit:
 
 ; Sub-column of the first round is done seperately
 ; Other rounds are done together with the shiftrow
+#ifdef	ENCRYPT
 encrypt:
 	ldi	two,	0x02
-	ldi count,	39
-	sub_column_first
-	add_key
-	mix_column
+	ldi count,	ENC_DEC_ROUNDS
 enc_round:
 	shift_row_with_sub_column
-	add_key
+	add_round_const_round_key
 	mix_column
 	dec	count
 	brne enc_round
 exit:
 	ret
+#endif

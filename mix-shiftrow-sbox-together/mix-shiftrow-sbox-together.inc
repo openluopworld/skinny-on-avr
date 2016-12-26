@@ -269,8 +269,8 @@ key_schedule_exit:
 ; 7  4  5  6  -----------> 8  9  10 11
 ; 10 11 8  9               12 13 14 15 
 .macro shift_row_with_sub_column
-	; first part
-	mov		t0,		s0
+	; first part t0 and t1 are pairs.
+	movw	t0,		s0
 	mov		r30,	s13
 	ld		s0,		z
 	mov		r30,	s11
@@ -288,7 +288,6 @@ key_schedule_exit:
 	mov		r30,	t0
 	ld		s4,		z
 	; second part
-	mov		t1,		s1
 	mov		r30,	s14
 	ld		s1,		z
 	mov		r30,	s8
